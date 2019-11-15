@@ -10,19 +10,18 @@ nil
 end
 
 def consolidate_cart(cart)
-  new_hash = {}
-  cart.each do |item|
-    if new_hash[item.keys[0]]
-      new_hash[item.keys[0]][:count] += 1
-    else
-      new_hash[item.keys[0]] = {
-        count: 1,
-        price: item.values[0][:price],
-        clearance: item.values[0][:clearance]
-      }
+  new_cart = cart.uniq
+  result = {}
+  new_cart.collect do |item_hash|
+    item_quan = cart.count(item_hash)
+    item_hash.collect do |item, details|
+    result[item] = details
+    result[item][:count] = item_quan
+    # binding.pry
     end
   end
-  new_hash
+  result
+  # binding.pry
 end
 
 def apply_coupons(cart, coupons)
