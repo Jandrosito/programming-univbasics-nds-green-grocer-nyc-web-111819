@@ -30,7 +30,30 @@ end
 
 def apply_coupons(cart, coupons)
   # REMEMBER: This method **should** update cart
-  
+  oupon_count = 0
+  pre_coupon = ""
+  coupons.each do |c|
+    if pre_coupon == "" || c[:item] != pre_coupon
+      coupon_count = 0
+    end
+
+    if cart.key?(c[:item])
+      coupon_count += c[:num]
+      if cart[c[:item]][:count] >= c[:num]
+        hash = {}
+        hash[:price] = c[:cost] / c[:num]
+        hash[:clearance] = cart[c[:item]][:clearance]
+        hash[:count] = coupon_count
+        cart["#{c[:item]} W/COUPON"] = hash
+        cart[c[:item]][:count] -= c[:num]
+      else
+        cart[c[:item]][:count] = cart[c[:item]][:count]
+      end
+
+    end
+    pre_coupon = c[:item]
+  end
+  cart
 end
 
 def apply_clearance(cart)
