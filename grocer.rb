@@ -73,5 +73,21 @@ def checkout(cart, coupons)
   #
   # BEFORE it begins the work of calculating the total (or else you might have
   # some irritated customers
-  
+  checkout_cart = consolidate_cart(cart)
+  checkout_cart = apply_coupons(checkout_cart, coupons)
+  checkout_cart = apply_clearance(checkout_cart)
+  total = 0
+
+  checkout_cart.each do |grocery, attribute|
+    total += attribute[:price] * attribute[:count]
+  end
+
+  grand_total = total
+  if total > 100
+    discount = total * 0.1
+    grand_total = total - discount
+  end
+
+  grand_total
+
 end
