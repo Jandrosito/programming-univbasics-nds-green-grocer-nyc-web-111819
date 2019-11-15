@@ -58,7 +58,11 @@ end
 
 def apply_clearance(cart)
   # REMEMBER: This method **should** update cart
-  
+  cart.each do |key, value|
+    if cart[key][:clearance]
+      cart[key][:price] = cart[key][:price] - ((cart[key][:price] * 20) / 100)
+    end
+  end
 end
 
 def checkout(cart, coupons)
