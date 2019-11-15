@@ -10,84 +10,59 @@ nil
 end
 
 def consolidate_cart(cart)
-  # REMEMBER: This returns a new Array that represents the cart. Don't merely
-  # change `cart` (i.e. mutate) it. It's easier to return a new thing.
-  groceries = {}
-
-  cart.each do |grocery|
-    grocery.each do |item, item_hash|
-      groceries[item] ||= item_hash
-
-      if groceries[item].key?(:count)
-        groceries[item][:count] += 1
-      else
-        groceries[item][:count] = 1
-      end
+  new_hash = {}
+  cart.each do |item|
+    if new_hash[item.keys[0]]
+      new_hash[item.keys[0]][:count] += 1
+    else
+      new_hash[item.keys[0]] = {
+        count: 1,
+        price: item.values[0][:price],
+        clearance: item.values[0][:clearance]
+      }
     end
   end
-  groceries
+  new_hash
 end
 
 def apply_coupons(cart, coupons)
-  # REMEMBER: This method **should** update cart
-  oupon_count = 0
-  pre_coupon = ""
-  coupons.each do |c|
-    if pre_coupon == "" || c[:item] != pre_coupon
-      coupon_count = 0
-    end
-
-    if cart.key?(c[:item])
-      coupon_count += c[:num]
-      if cart[c[:item]][:count] >= c[:num]
-        hash = {}
-        hash[:price] = c[:cost] / c[:num]
-        hash[:clearance] = cart[c[:item]][:clearance]
-        hash[:count] = coupon_count
-        cart["#{c[:item]} W/COUPON"] = hash
-        cart[c[:item]][:count] -= c[:num]
-      else
-        cart[c[:item]][:count] = cart[c[:item]][:count]
+  coupons.each do |coupon|
+    if cart.keys.include? coupon[:item]
+      if cart[coupon[:item]][:count] >= coupon[:num]
+        new_name = "#{coupon[:item]} W/COUPON"
+        if cart[new_name]
+          cart[new_name][:count] += coupon[:num]
+        else
+          cart[new_name] = {
+            count: coupon[:num],
+            price: coupon[:cost]/coupon[:num],
+            clearance: cart[coupon[:item]][:clearance]
+          }
+        end
+        cart[coupon[:item]][:count] -= coupon[:num]
       end
-
     end
-    pre_coupon = c[:item]
   end
   cart
 end
 
 def apply_clearance(cart)
-  # REMEMBER: This method **should** update cart
-  cart.each do |key, value|
-    if cart[key][:clearance]
-      cart[key][:price] = cart[key][:price] - ((cart[key][:price] * 20) / 100)
+  cart.keys.each do |item|
+    if cart[item][:clearance]
+      cart[item][:price] = (cart[item][:price]*0.80).round(2)
     end
   end
+  cart
 end
 
 def checkout(cart, coupons)
-  # This method should call
-  # * consolidate_cart
-  # * apply_coupons
-  # * apply_clearance
-  #
-  # BEFORE it begins the work of calculating the total (or else you might have
-  # some irritated customers
-  checkout_cart = consolidate_cart(cart)
-  checkout_cart = apply_coupons(checkout_cart, coupons)
-  checkout_cart = apply_clearance(checkout_cart)
-  total = 0
+  consol_cart = consolidate_cart(cart)
+  cart_with_coupons_applied = apply_coupons(consol_cart, coupons)
+  cart_with_discounts_applied = apply_clearance(cart_with_coupons_applied)
 
-  checkout_cart.each do |grocery, attribute|
-    total += attribute[:price] * attribute[:count]
+  total = 0.0
+  cart_with_discounts_applied.keys.each do |item|
+    total += cart_with_discounts_applied[item][:price]*cart_with_discounts_applied[item][:count]
   end
-
-  grand_total = total
-  if total > 100
-    discount = total * 0.1
-    grand_total = total - discount
-  end
-
-  grand_total
-
+  total > 100.00 ? (total * 0.90).round : total
 end
