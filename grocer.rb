@@ -1,12 +1,6 @@
 def find_item_by_name_in_collection(name, collection)
   # Implement me first!
-  array = collection
-  if !collection[name]
-    name = collection[name]
-    name
-  else
-    nil 
-  end
+  
 end
 
 def consolidate_cart(cart)
