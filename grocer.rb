@@ -1,10 +1,11 @@
 def find_item_by_name_in_collection(name, collection)
   # Implement me first!
+  i = 0
   while i < collection do
   if collection[i][:name] = name
-    name
+    return name
   end
-end
+  i += 1
 nil
 end
 
