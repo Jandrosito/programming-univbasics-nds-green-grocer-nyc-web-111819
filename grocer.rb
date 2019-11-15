@@ -10,27 +10,22 @@ nil
 end
 
 def consolidate_cart(cart)
-  # Consult README for inputs and outputs
-  #
   # REMEMBER: This returns a new Array that represents the cart. Don't merely
   # change `cart` (i.e. mutate) it. It's easier to return a new thing.
+  
 end
 
 def apply_coupons(cart, coupons)
-  # Consult README for inputs and outputs
-  #
   # REMEMBER: This method **should** update cart
+  
 end
 
 def apply_clearance(cart)
-  # Consult README for inputs and outputs
-  #
   # REMEMBER: This method **should** update cart
+  
 end
 
 def checkout(cart, coupons)
-  # Consult README for inputs and outputs
-  #
   # This method should call
   # * consolidate_cart
   # * apply_coupons
@@ -38,4 +33,5 @@ def checkout(cart, coupons)
   #
   # BEFORE it begins the work of calculating the total (or else you might have
   # some irritated customers
+  
 end
