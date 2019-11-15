@@ -1,12 +1,11 @@
 def find_item_by_name_in_collection(name, collection)
   # Implement me first!
-  
-  
-  if !collection[:name[name]]
-    return collection[:name[name]]
-  else 
+  array = collection
+  if !collection[name]
+    name = collection[name]
+    name
+  else
     nil 
-  end
 end
 
 def consolidate_cart(cart)
